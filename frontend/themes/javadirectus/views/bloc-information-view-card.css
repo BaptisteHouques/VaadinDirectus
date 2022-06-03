@@ -1,0 +1,6 @@
+.button {
+    margin: auto auto 0;
+    background-color : lightgrey;
+    color : green;
+    border: 1px solid green;
+}
