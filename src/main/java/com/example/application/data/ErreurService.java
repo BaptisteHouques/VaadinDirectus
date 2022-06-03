@@ -20,8 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "CodeJSON_Erreur"
 })
 @Generated("jsonschema2pojo")
-public class ErreurBloc {
-
+public class ErreurService {
     @JsonProperty("id")
     private Integer id;
     @JsonProperty("date_created")

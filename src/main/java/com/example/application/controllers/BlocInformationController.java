@@ -1,7 +1,7 @@
 package com.example.application.controllers;
 
 import com.example.application.data.BlocInformation;
-import com.example.application.data.ErreurBloc;
+import com.example.application.data.ErreurService;
 import com.example.application.services.RestAPIService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpMethod;
@@ -16,19 +16,21 @@ import java.util.List;
 @Component
 public class BlocInformationController {
     final RestAPIService blocService = new RestAPIService();
-    public List<BlocInformation> getBlocInformation() {
+
+        public List<BlocInformation> getBlocInformation() {
         String url = "http://localhost:8055/items/bloc_information/?fields=*,Erreur_Bloc.*";
-        String response = this.blocService.callAPI(url, HttpMethod.GET, null, null);
-        if (response != null) {
-            String result = response.substring(8, response.length() - 1);
-            ObjectMapper mapper = new ObjectMapper();
-            List<BlocInformation> blocInformationList = null;
-            try {
-                blocInformationList = Arrays.asList(mapper.readValue(result, BlocInformation[].class));
-            } catch (IOException e) {
-                e.printStackTrace();
+            Object response = this.blocService.callAPI(url, HttpMethod.GET, null, null, BlocInformation[].class);
+            if (response instanceof BlocInformation[]) {
+                return Arrays.asList((BlocInformation[]) response);
             }
-            return blocInformationList;
+            return null;
+    }
+
+    public List<ErreurService> getErreurService() {
+        String url = "http://localhost:8055/items/erreur_service";
+        Object response = this.blocService.callAPI(url, HttpMethod.GET, null, null, ErreurService[].class);
+        if (response instanceof ErreurService[]) {
+            return Arrays.asList((ErreurService[]) response);
         }
         return null;
     }
@@ -41,18 +43,9 @@ public class BlocInformationController {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.set("Authorization", "Bearer "+token);
         headers.set("Content-Type", "application/json");
-        final RestAPIService blocService = new RestAPIService();
-        String response = blocService.callAPI(url, HttpMethod.PATCH, body, headers);
-        if (response != null) {
-            String result = response.substring(8, response.length() - 1);
-            ObjectMapper mapper = new ObjectMapper();
-            BlocInformation blocInformation = null;
-            try {
-                blocInformation = mapper.readValue(result, BlocInformation.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return blocInformation;
+        Object response = blocService.callAPI(url, HttpMethod.PATCH, body, headers, BlocInformation.class);
+        if (response instanceof BlocInformation) {
+            return (BlocInformation) response;
         }
         return null;
     }

@@ -2,11 +2,15 @@ package com.example.application.views.blocinformation;
 
 import com.example.application.controllers.BlocInformationController;
 import com.example.application.data.BlocInformation;
+import com.example.application.data.ErreurService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BlocInformationViewCard extends ListItem{
     private Integer blocId;
@@ -53,7 +57,20 @@ public class BlocInformationViewCard extends ListItem{
 
         button.addClickListener((e) -> {
             BlocInformationController blocController = new BlocInformationController();
-            BlocInformation data = blocController.updateBlocError(blocId);
+            List<ErreurService> erreurServiceList = blocController.getErreurService();
+
+            List<String> erreurList = null;
+
+//            for (ErreurService erreur : erreurServiceList) {
+//                List<String> erreurList = List.of(erreur.getTitreErreur());
+//            }
+
+            RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
+            radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+            radioGroup.setLabel("Travel class");
+            //radioGroup.setItems(list);
+
+            add(radioGroup);
         });
 
         add(div, header, description, button);

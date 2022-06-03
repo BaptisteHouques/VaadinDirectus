@@ -48,7 +48,7 @@ public class BlocInformation extends DataBlocInformation{
     @JsonProperty("ImageArrierePlan")
     private String image;
     @JsonProperty("Erreur_Bloc")
-    private ErreurBloc erreurBloc;
+    private ErreurService erreurService;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -153,13 +153,13 @@ public class BlocInformation extends DataBlocInformation{
     }
 
     @JsonProperty("Erreur_Bloc")
-    public ErreurBloc getErreurBloc() {
-        return erreurBloc;
+    public ErreurService getErreurBloc() {
+        return erreurService;
     }
 
     @JsonProperty("Erreur_Bloc")
-    public void setErreurBloc(ErreurBloc erreurBloc) {
-        this.erreurBloc = erreurBloc;
+    public void setErreurBloc(ErreurService erreurService) {
+        this.erreurService = erreurService;
     }
 
     @JsonAnyGetter
