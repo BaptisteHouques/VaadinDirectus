@@ -35,15 +35,18 @@ public class BlocInformationController {
         return null;
     }
 
-    public BlocInformation updateBlocError(int idBloc) {
+    public BlocInformation updateBlocError(int idBloc, Integer errorValue) {
         String url = "http://localhost:8055/items/bloc_information/" + idBloc;
         String token = "t";
-        Integer errorValue = null;
         String body = "{\"Erreur_Bloc\":"+errorValue+"}";
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.set("Authorization", "Bearer "+token);
         headers.set("Content-Type", "application/json");
-        Object response = blocService.callAPI(url, HttpMethod.PATCH, body, headers, BlocInformation.class);
+        Object response;
+        if (errorValue == null)
+            response = blocService.callAPI(url, HttpMethod.PATCH, body, headers, BlocInformation.class);
+        else
+            response = blocService.callAPI(url, HttpMethod.PATCH, body, headers, null);
         if (response instanceof BlocInformation) {
             return (BlocInformation) response;
         }
