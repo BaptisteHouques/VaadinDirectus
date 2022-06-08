@@ -4,8 +4,6 @@ import com.example.application.controllers.BlocInformationController;
 import com.example.application.data.BlocInformation;
 import com.example.application.views.MainLayout;
 import com.example.application.views.blocinformation.components.BlocInformationViewCard;
-import com.example.application.views.blocinformation.components.BlocInformationViewCardError;
-import com.example.application.views.blocinformation.components.BlocInformationViewCardGeneral;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.html.H2;
@@ -41,10 +39,10 @@ public class BlocInformationView extends Main implements HasComponents, HasStyle
             String image = ((bloc.getImageArrierePlan() == null) ? "https://www.projetcartylion.fr/app/uploads/2020/08/Placeholder.png" : "http://localhost:8055/assets/" + bloc.getImageArrierePlan());
             if (bloc.getErreurBloc() != null){
                 //imageContainer.add(new BlocInformationViewCardError(bloc.getId(), image, bloc.getTitre(), bloc.getErreurBloc().getCodeJSONErreur().getType(), bloc.getErreurBloc().getCodeJSONErreur().getDescription()));
-                imageContainer.add(new BlocInformationViewCardGeneral(bloc.getId(), image, bloc.getTitre(), null, null, bloc.getErreurBloc().getCodeJSONErreur().getType(), bloc.getErreurBloc().getCodeJSONErreur().getDescription()));
+                imageContainer.add(new BlocInformationViewCard(bloc.getId(), image, bloc.getTitre(), null, null, bloc.getErreurBloc()));
             }
             //else imageContainer.add(new BlocInformationViewCard(bloc.getId(), image, bloc.getTitre(), bloc.getDescription(), bloc.getLien()));
-            else imageContainer.add(new BlocInformationViewCardGeneral(bloc.getId(), image, bloc.getTitre(), bloc.getDescription(), bloc.getLien(), null, null));
+            else imageContainer.add(new BlocInformationViewCard(bloc.getId(), image, bloc.getTitre(), bloc.getDescription(), bloc.getLien(), null));
         }
 
     }
