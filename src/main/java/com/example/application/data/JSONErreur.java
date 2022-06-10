@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "Description"
 })
 @Generated("jsonschema2pojo")
-public class CodeJSONErreur {
+public class JSONErreur {
 
     @JsonProperty("Type")
     private String type;

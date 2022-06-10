@@ -24,10 +24,8 @@ public class RestAPIService {
             final ResponseEntity<String> response = rt.exchange(url, httpMethod, request, String.class);
             if (!response.getStatusCode().equals(HttpStatus.OK))
                 System.out.println("Erreur à l'appelle de l'url : "+url+", erreur : "+response.getStatusCode());
-            if (response.getBody() == null)
-                return null;
-            if (clazz == null)
-                return null;
+            if (response.getBody() == null || clazz == null)
+                return "";
             String result = response.getBody().substring(8, response.getBody().length() - 1);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(result, clazz);

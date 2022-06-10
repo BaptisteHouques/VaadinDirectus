@@ -6,20 +6,33 @@ import com.example.application.data.ErreurService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
+@Component
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class BlocInformationViewCard extends ListItem {
     private Button button = newButton();
     private List<ErreurService> listErreurs;
-    private final BlocInformationController blocController = new BlocInformationController();
+    @Autowired
+    BlocInformationController blocController;
 
-    public BlocInformationViewCard(int blocId, String blocImage, String blocTitre, String blocDescription, String blocLien, ErreurService blocError) {
+//    public BlocInformationViewCard(int blocId, String blocImage, String blocTitre, String blocDescription, String blocLien, ErreurService blocError) {
+//    }
+
+//    @PostConstruct
+    public void init(int blocId, String blocImage, String blocTitre, String blocDescription, String blocLien, ErreurService blocError){
         addClassNames("bg-contrast-5", "flex", "flex-col", "items-start", "p-m", "rounded-l");
 
         Div div = new Div();
@@ -77,6 +90,11 @@ public class BlocInformationViewCard extends ListItem {
         button.getStyle().set("border-color", "green");
         button.addClickListener((e) -> {
             BlocInformation bloc = blocController.updateBlocError(blocId, null);
+            if (bloc == null || bloc.getId() == null){
+                Notification notification = Notification.show("Une erreur est survenue, merci de réessayer plus tard", 5000, Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                return;
+            }
             description.getStyle().clear();
             description.setText(bloc.getDescription());
             remove(errorType, button);
@@ -92,17 +110,18 @@ public class BlocInformationViewCard extends ListItem {
         button.getStyle().set("color", "red");
         button.getStyle().set("border-color", "red");
 
-        button.addClickListener((event1) -> {
-            List<String> erreurListString = new ArrayList<>();
-            for (ErreurService erreur : getListErreurs()) {
-                erreurListString.add(erreur.getTitreErreur());
-            }
+        if (getListErreurs().size() == 0){
+            Notification notification = Notification.show("Aucun type d'erreur disponible", 5000, Notification.Position.TOP_CENTER);
+            notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            return;
+        }
 
-            RadioButtonGroup<String> erreurRadioList = new RadioButtonGroup<>();
+        button.addClickListener((event1) -> {
+            RadioButtonGroup<ErreurService> erreurRadioList = new RadioButtonGroup<>();
             erreurRadioList.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
             erreurRadioList.setLabel("Sélectionner une erreur");
-            erreurRadioList.setItems(erreurListString);
-            //erreurRadioList.setItems(getListErreurs().stream().reduce(e -> e.getTitreErreur()).get());
+            erreurRadioList.setItems(getListErreurs());
+            erreurRadioList.setRenderer(new ComponentRenderer<>(erreur -> new Span(erreur.getTitre())));
             erreurRadioList.addClassName("mb-m");
 
             remove(description, button);
@@ -116,20 +135,27 @@ public class BlocInformationViewCard extends ListItem {
 
             save.addClickListener(event2 -> {
                 if (erreurRadioList.getValue() == null) {
-                    Notification.show("Veuillez sélectionner une option", 5000, Notification.Position.TOP_CENTER);
-                } else {
-                    Optional<ErreurService> optionalErreur = getListErreurs().stream().filter(e -> Objects.equals(e.getTitreErreur(), erreurRadioList.getValue())).findFirst();
-                    if (optionalErreur.isEmpty()) {
-                        Notification.show("Erreur : ça ne devrait pas arriver", 5000, Notification.Position.TOP_CENTER);
+                    Notification notification = Notification.show("Veuillez sélectionner une option", 5000, Notification.Position.TOP_CENTER);
+                    notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                }
+                else {
+                    BlocInformation bloc = blocController.updateBlocError(blocId, erreurRadioList.getValue().getId());
+                    if (bloc == null){
+                        Notification notification = Notification.show("Une erreur est survenue, merci de réessayer plus tard", 5000, Notification.Position.TOP_CENTER);
+                        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                        return;
+                    }
+                    remove(erreurRadioList, save);
+
+                    if (bloc.getErreur() == null) {
+                        Notification notification = Notification.show("L'affichage sera actualisé dans quelques minutes", 5000, Notification.Position.TOP_CENTER);
+                        notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                        add(description);
                         return;
                     }
 
-                    ErreurService erreur = optionalErreur.get();
-                    blocController.updateBlocError(blocId, erreur.getId());
-                    remove(erreurRadioList, save);
-
-                    errorTypeStyle(errorType, erreur);
-                    descriptionStyle(description, erreur);
+                    errorTypeStyle(errorType, erreurRadioList.getValue());
+                    descriptionStyle(description, erreurRadioList.getValue());
 
                     Button button2 = newButton();
 
@@ -152,14 +178,14 @@ public class BlocInformationViewCard extends ListItem {
     }
     private void errorTypeStyle(Span errorType, ErreurService blocError) {
         errorType.addClassNames("text-xl", "font-semibold");
-        errorType.setText(blocError.getCodeJSONErreur().getType());
+        errorType.setText(blocError.getJSONErreur().getType());
         errorType.getStyle().set("color", "red");
         errorType.getStyle().set("text-transform", "uppercase");
         errorType.getStyle().set("margin-top", "10px");
     }
 
     private void descriptionStyle(Paragraph description, ErreurService erreur) {
-        description.setText(erreur.getCodeJSONErreur().getDescription());
+        description.setText(erreur.getJSONErreur().getDescription());
         description.addClassName("my-m");
         description.getStyle().set("color", "red");
         description.getStyle().set("text-transform", "uppercase");

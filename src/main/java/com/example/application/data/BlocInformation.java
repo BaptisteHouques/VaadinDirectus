@@ -22,8 +22,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "Titre",
     "Lien",
     "Description",
-    "ImageArrierePlan",
-    "Erreur_Bloc"
+    "Image",
+    "Erreur"
 })
 @Generated("jsonschema2pojo")
 public class BlocInformation extends DataBlocInformation{
@@ -45,9 +45,9 @@ public class BlocInformation extends DataBlocInformation{
     private String lien;
     @JsonProperty("Description")
     private String description;
-    @JsonProperty("ImageArrierePlan")
+    @JsonProperty("Image")
     private String image;
-    @JsonProperty("Erreur_Bloc")
+    @JsonProperty("Erreur")
     private ErreurService erreurService;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -142,23 +142,23 @@ public class BlocInformation extends DataBlocInformation{
         this.description = description;
     }
 
-    @JsonProperty("ImageArrierePlan")
-    public String getImageArrierePlan() {
+    @JsonProperty("Image")
+    public String getImage() {
         return image;
     }
 
-    @JsonProperty("ImageArrierePlan")
-    public void setImageArrierePlan(String image) {
+    @JsonProperty("Image")
+    public void setImage(String image) {
         this.image = image;
     }
 
-    @JsonProperty("Erreur_Bloc")
-    public ErreurService getErreurBloc() {
+    @JsonProperty("Erreur")
+    public ErreurService getErreur() {
         return erreurService;
     }
 
-    @JsonProperty("Erreur_Bloc")
-    public void setErreurBloc(ErreurService erreurService) {
+    @JsonProperty("Erreur")
+    public void setErreur(ErreurService erreurService) {
         this.erreurService = erreurService;
     }
 

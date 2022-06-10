@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "id",
     "date_created",
     "date_updated",
-    "Titre_Erreur",
-    "CodeJSON_Erreur"
+    "Titre",
+    "JSONErreur"
 })
 @Generated("jsonschema2pojo")
 public class ErreurService {
@@ -27,10 +27,10 @@ public class ErreurService {
     private String dateCreated;
     @JsonProperty("date_updated")
     private Object dateUpdated;
-    @JsonProperty("Titre_Erreur")
-    private String titreErreur;
-    @JsonProperty("CodeJSON_Erreur")
-    private CodeJSONErreur codeJSONErreur;
+    @JsonProperty("Titre")
+    private String titre;
+    @JsonProperty("JSONErreur")
+    private JSONErreur JSONErreur;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -64,24 +64,24 @@ public class ErreurService {
         this.dateUpdated = dateUpdated;
     }
 
-    @JsonProperty("Titre_Erreur")
-    public String getTitreErreur() {
-        return titreErreur;
+    @JsonProperty("Titre")
+    public String getTitre() {
+        return titre;
     }
 
-    @JsonProperty("Titre_Erreur")
-    public void setTitreErreur(String titreErreur) {
-        this.titreErreur = titreErreur;
+    @JsonProperty("Titre")
+    public void setTitre(String titre) {
+        this.titre = titre;
     }
 
-    @JsonProperty("CodeJSON_Erreur")
-    public CodeJSONErreur getCodeJSONErreur() {
-        return codeJSONErreur;
+    @JsonProperty("JSONErreur")
+    public JSONErreur getJSONErreur() {
+        return JSONErreur;
     }
 
-    @JsonProperty("CodeJSON_Erreur")
-    public void setCodeJSONErreur(CodeJSONErreur codeJSONErreur) {
-        this.codeJSONErreur = codeJSONErreur;
+    @JsonProperty("JSONErreur")
+    public void setJSONErreur(JSONErreur JSONErreur) {
+        this.JSONErreur = JSONErreur;
     }
 
     @JsonAnyGetter
