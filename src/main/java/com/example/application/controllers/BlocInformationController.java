@@ -35,7 +35,9 @@ public class BlocInformationController {
 
     public List<BlocInformation> getBlocInformation() {
         String url = apiDirectus+apiGetBlocInformation+apiWithErreur;
-        Object response = this.blocService.callAPI(url, HttpMethod.GET, null, null, BlocInformation[].class);
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.set("Authorization", "Bearer "+directusToken);
+        Object response = this.blocService.callAPI(url, HttpMethod.GET, null, headers, BlocInformation[].class);
         if (response instanceof BlocInformation[])
             return Arrays.asList((BlocInformation[]) response);
         if (response == "")
@@ -44,7 +46,9 @@ public class BlocInformationController {
     }
     public List<ErreurService> getErreurService() {
         String url = apiDirectus+apiGetErreurService;
-        Object response = this.blocService.callAPI(url, HttpMethod.GET, null, null, ErreurService[].class);
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.set("Authorization", "Bearer "+directusToken);
+        Object response = this.blocService.callAPI(url, HttpMethod.GET, null, headers, ErreurService[].class);
         if (response instanceof ErreurService[])
             return Arrays.asList((ErreurService[]) response);
         if (response == "")
@@ -54,10 +58,9 @@ public class BlocInformationController {
 
     public BlocInformation updateBlocError(int idBloc, Integer errorValue) {
         String url = apiDirectus+apiGetBlocInformation + "/" + idBloc + apiWithErreur;
-        String token = directusToken;
         String body = "{\"Erreur\":"+errorValue+"}";
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.set("Authorization", "Bearer "+token);
+        headers.set("Authorization", "Bearer "+directusToken);
         headers.set("Content-Type", "application/json");
         Object response = blocService.callAPI(url, HttpMethod.PATCH, body, headers, BlocInformation.class);
 
