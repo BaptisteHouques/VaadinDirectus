@@ -27,18 +27,18 @@ import java.util.List;
 @Route(value = "blocInformation", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 public class BlocInformationView extends Main implements HasComponents, HasStyle {
-
     private OrderedList imageContainer;
     @Autowired
     BlocInformationController blocInformationController;
-
     @Autowired
     private ObjectFactory<BlocInformationViewCard> blocInformationViewCardFactory;
     public BlocInformationView() {
     }
 
+    // Méthode appelée avant le constructeur faisant appel à la méthode constructUI et à la méthode du constructeur des blocs d'information pour les récupérer.
+    // Remplit la liste imageContainer de composant card ayant les données des bloc d'information récupérés.
     @PostConstruct
-    private void init(){
+    private void init() {
         constructUI();
         List<BlocInformation> result = blocInformationController.getBlocInformation();
 
@@ -67,6 +67,7 @@ public class BlocInformationView extends Main implements HasComponents, HasStyle
         }
     }
 
+    // Construction de la page avec des composants Vaadin.
     private void constructUI() {
         addClassNames("bloc-information-view", "max-w-screen-lg", "mx-auto", "pb-l", "px-l");
 
@@ -83,6 +84,5 @@ public class BlocInformationView extends Main implements HasComponents, HasStyle
 
         container.add(header);
         add(container, imageContainer);
-
     }
 }

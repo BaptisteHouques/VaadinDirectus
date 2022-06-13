@@ -33,6 +33,8 @@ public class BlocInformationController {
     @Value("${api.getErreurService}")
     private String apiGetErreurService;
 
+    // Méthode appelée pour l'affichage des blocs d'information.
+    // Utilise le service pour récupérer la liste des blocs d'information disponibles.
     public List<BlocInformation> getBlocInformation() {
         String url = apiDirectus+apiGetBlocInformation+apiWithErreur;
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -44,6 +46,8 @@ public class BlocInformationController {
             return new ArrayList<>();
         return null;
     }
+
+    // Méthode utilisée pour récupérer la liste des erreurs disponibles.
     public List<ErreurService> getErreurService() {
         String url = apiDirectus+apiGetErreurService;
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -56,6 +60,8 @@ public class BlocInformationController {
         return null;
     }
 
+    // Méthode utilisée pour effectuer une requête PATCH en appelant le service afin d'ajouter ou de retirer une erreur à un bloc d'information.
+    // Le paramètre errorValue correspond à l'id de l'erreur à attribuer à l'attribut Erreur d'un bloc d'information.
     public BlocInformation updateBlocError(int idBloc, Integer errorValue) {
         String url = apiDirectus+apiGetBlocInformation + "/" + idBloc + apiWithErreur;
         String body = "{\"Erreur\":"+errorValue+"}";

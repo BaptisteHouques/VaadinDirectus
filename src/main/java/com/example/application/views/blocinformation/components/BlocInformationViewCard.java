@@ -28,10 +28,7 @@ public class BlocInformationViewCard extends ListItem {
     @Autowired
     BlocInformationController blocController;
 
-//    public BlocInformationViewCard(int blocId, String blocImage, String blocTitre, String blocDescription, String blocLien, ErreurService blocError) {
-//    }
-
-//    @PostConstruct
+    // Composant card servant à afficher un bloc d'information et attribue des évènements à ce dernier.
     public void init(int blocId, String blocImage, String blocTitre, String blocDescription, String blocLien, ErreurService blocError){
         addClassNames("bg-contrast-5", "flex", "flex-col", "items-start", "p-m", "rounded-l");
 
@@ -54,6 +51,7 @@ public class BlocInformationViewCard extends ListItem {
         Span errorType = new Span();
         Paragraph description = new Paragraph(blocDescription);
 
+        // Si une erreur est associée au bloc.
         if (blocError != null ) {
             errorTypeStyle(errorType, blocError);
             descriptionStyle(description, blocError);
@@ -78,19 +76,24 @@ public class BlocInformationViewCard extends ListItem {
         add(button);
     }
 
+    // Récupération de la liste des erreurs disponibles.
     private List<ErreurService> getListErreurs() {
         if (listErreurs == null)
             listErreurs = blocController.getErreurService();
         return listErreurs;
     }
 
+    // Modification de l'affichage pour un bloc d'information possédant une erreur.
+    // Prend en paramètre le bouton actuellement affiché pour le modifier.
+    // Ajout d'un évènement sur le bouton permettant de retirer l'erreur liée au bloc d'information.
+    // Si l'erreur est retirée on appelle l'autre méthode modifiant l'affichage pour un bloc n'ayant pas d'erreur.
     private void removeErrorButton(Button button, Integer blocId, Span errorType, Paragraph description) {
         button.setText("Rendre Accessible");
         button.getStyle().set("color", "green");
         button.getStyle().set("border-color", "green");
         button.addClickListener((e) -> {
             BlocInformation bloc = blocController.updateBlocError(blocId, null);
-            if (bloc == null || bloc.getId() == null){
+            if (bloc == null){
                 Notification notification = Notification.show("Une erreur est survenue, merci de réessayer plus tard", 5000, Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 return;
@@ -105,11 +108,16 @@ public class BlocInformationViewCard extends ListItem {
         });
     }
 
+    // Modification de l'affichage pour un bloc d'information ne possédant pas d'erreur.
+    // Prend en paramètre le bouton actuellement affiché pour le modifier.
+    // Ajout d'un évènement sur le bouton permettant d'ajouter, via un formulaire, une erreur au bloc d'information.
+    // Si une erreur est ajoutée on appelle l'autre méthode modifiant l'affichage pour un bloc ayant une erreur liée.
     private void setErrorButton(Button button, Integer blocId, Span errorType, Paragraph description) {
         button.setText("Rendre Inaccessible");
         button.getStyle().set("color", "red");
         button.getStyle().set("border-color", "red");
 
+        // Vérification de l'existance d'erreur.
         if (getListErreurs().size() == 0){
             Notification notification = Notification.show("Aucun type d'erreur disponible", 5000, Notification.Position.TOP_CENTER);
             notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
@@ -117,6 +125,7 @@ public class BlocInformationViewCard extends ListItem {
         }
 
         button.addClickListener((event1) -> {
+            // Formulaire d'options pour la sélection d'une erreur.
             RadioButtonGroup<ErreurService> erreurRadioList = new RadioButtonGroup<>();
             erreurRadioList.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
             erreurRadioList.setLabel("Sélectionner une erreur");
@@ -147,6 +156,7 @@ public class BlocInformationViewCard extends ListItem {
                     }
                     remove(erreurRadioList, save);
 
+                    // Erreur affichée pour l'utilisateur si la réponse ne s'est pas actualisée (cache ou autre).
                     if (bloc.getErreur() == null) {
                         Notification notification = Notification.show("L'affichage sera actualisé dans quelques minutes", 5000, Notification.Position.TOP_CENTER);
                         notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
